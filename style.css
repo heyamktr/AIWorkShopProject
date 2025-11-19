@@ -6,7 +6,9 @@ body {
     background: linear-gradient(to bottom right, #f0fff4, #d0f0c0);
     color: #1b5e20;
   }
-
+body2{
+  margin: 0;
+}
   /* Sidebar */
   .sidebar {
     width: 280px;
