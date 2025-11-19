@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Find Your Favorite Tea</title>
+  <link rel="stylesheet" href="style.css">
+  
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>Tea Menu</h2>
+    <div class="tea-item"><strong>Matcha Latte</strong><div class="note">Green tea, strong, with milk</div></div>
+    <div class="tea-item"><strong>Traditional Green Tea</strong><div class="note">Green tea, strong, without milk</div></div>
+    <div class="tea-item"><strong>English Breakfast Latte</strong><div class="note">Black tea, strong, with milk</div></div>
+    <div class="tea-item"><strong>Assam Black Tea</strong><div class="note">Black tea, strong, without milk</div></div>
+    <div class="tea-item"><strong>Rooibos Latte</strong><div class="note">Herbal tea, strong, with milk</div></div>
+    <div class="tea-item"><strong>Peppermint Tea</strong><div class="note">Herbal tea, strong, without milk</div></div>
+    <div class="tea-item"><strong>Chai Latte</strong><div class="note">Flavored tea, strong, with milk</div></div>
+    <div class="tea-item"><strong>Ginger Tea</strong><div class="note">Flavored tea, strong, without milk</div></div>
+    <div class="tea-item"><strong>Hojicha Latte</strong><div class="note">Green tea, light, with milk</div></div>
+    <div class="tea-item"><strong>Sencha</strong><div class="note">Green tea, light, without milk</div></div>
+    <div class="tea-item"><strong>Thai Tea</strong><div class="note">Black tea, light, with milk</div></div>
+    <div class="tea-item"><strong>Earl Grey</strong><div class="note">Black tea, light, without milk</div></div>
+    <div class="tea-item"><strong>Chamomile Latte</strong><div class="note">Herbal tea, light, with milk</div></div>
+    <div class="tea-item"><strong>Chamomile</strong><div class="note">Herbal tea, light, without milk</div></div>
+    <div class="tea-item"><strong>Jasmine Tea Latte</strong><div class="note">Flavored tea, light, with milk</div></div>
+    <div class="tea-item"><strong>Jasmine Tea</strong><div class="note">Flavored tea, light, without milk</div></div>
+  </div>
+
+  <div class="main">
+    <h1>Find Your Tea</h1>
+    <p>This platform helps you decide which tea you might like best.</p>
+    <div id="question"></div>
+    <div class="buttons">
+      <button id="yes">Yes</button>
+      <button id="no">No</button>
+      <button id="restart">Restart</button>
+    </div>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const root = {
+      question: "strong",
+      yes: {
+        question: "green-tea",
+        yes: { question: "with-milk", yes: { guess: "Matcha Latte" }, no: { guess: "Traditional Green Tea" } },
+        no: { question: "black-tea",
+          yes: { question: "with-milk", yes: { guess: "English Breakfast Latte" }, no: { guess: "Assam Black Tea" } },
+          no: { question: "herbal-tea",
+            yes: { question: "with-milk", yes: { guess: "Rooibos Latte" }, no: { guess: "Peppermint Tea" } },
+            no: { question: "flavored-tea",
+              yes: { question: "with-milk", yes: { guess: "Chai Latte" }, no: { guess: "Ginger Tea" } }
+            }
+          }
+        }
+      },
+      no: {
+        question: "green-tea",
+        yes: { question: "with-milk", yes: { guess: "Hojicha Latte" }, no: { guess: "Sencha" } },
+        no: { question: "black-tea",
+          yes: { question: "with-milk", yes: { guess: "Thai Tea" }, no: { guess: "Earl Grey" } },
+          no: { question: "herbal-tea",
+            yes: { question: "with-milk", yes: { guess: "Chamomile Latte" }, no: { guess: "Chamomile" } },
+            no: { question: "flavored-tea",
+              yes: { question: "with-milk", yes: { guess: "Jasmine Tea Latte" }, no: { guess: "Jasmine Tea" } }
+            }
+          }
+        }
+      }
+    };
+
+    const questions = {
+      "strong": "Do you like strong flavor?",
+      "light": "Do you like light flavor?",
+      "green-tea": "Do you like  green tea?",
+      "black-tea": "Do you like black tea?",
+      "herbal-tea": "Do you like herbal tea?",
+      "flavored-tea": "Do you like flavored tea?",
+      "with-milk": "Do you like served with milk?",
+      "without-milk": "Do you like served without milk?"
+    };
+
+    let currentNode = root;
+
+    const questionDiv = document.getElementById("question");
+    const resultDiv = document.getElementById("result");
+    const yesButton = document.getElementById("yes");
+    const noButton = document.getElementById("no");
+    const restartButton = document.getElementById("restart");
+
+    function askQuestion() {
+      if (currentNode.guess) {
+        questionDiv.innerText = "";
+        resultDiv.innerText = "You should try: " + currentNode.guess + "!";
+        yesButton.disabled = true;
+        noButton.disabled = true;
+      } else if (!currentNode.yes && !currentNode.no) {
+        questionDiv.innerText = "";
+        resultDiv.innerText = "Sorry, we couldn't find your tea. Try again!";
+        yesButton.disabled = true;
+        noButton.disabled = true;
+      } else {
+        questionDiv.innerText = questions[currentNode.question] || "Next question...";
+        resultDiv.innerText = "";
+        yesButton.disabled = false;
+        noButton.disabled = false;
+      }
+    }
+
+    yesButton.onclick = () => {
+      currentNode = currentNode.yes || {};
+      askQuestion();
+    };
+
+    noButton.onclick = () => {
+      currentNode = currentNode.no || {};
+      askQuestion();
+    };
+
+    restartButton.onclick = () => {
+      currentNode = root;
+      askQuestion();
+    };
+
+    // Start the game
+    askQuestion();
+  </script>
+</body>
+</html>
