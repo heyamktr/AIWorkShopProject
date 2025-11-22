@@ -3,10 +3,11 @@
 <head>
   <title>Find Your Favorite Tea</title>
   <link rel="stylesheet" href="style.css">
-  
 </head>
+
 <body>
 
+  <!-- Sidebar menu -->
   <div class="sidebar">
     <h2>Tea Menu</h2>
     <div class="tea-item"><strong>Matcha Latte</strong><div class="note">Green tea, strong, with milk</div></div>
@@ -27,58 +28,107 @@
     <div class="tea-item"><strong>Jasmine Tea</strong><div class="note">Flavored tea, light, without milk</div></div>
   </div>
 
+  <!-- Main panel -->
   <div class="main">
     <h1>Find Your Tea</h1>
     <p>This platform helps you decide which tea you might like best.</p>
+
     <div id="question"></div>
+
     <div class="buttons">
       <button id="yes">Yes</button>
       <button id="no">No</button>
       <button id="restart">Restart</button>
     </div>
+
     <div id="result"></div>
+
+    <!-- Where the tea image appears -->
+    <!-- You must place your own images inside /images/ folder -->
+    <img id="tea-image" style="max-width: 250px; margin-top: 20px; display:none; border-radius: 12px;">
   </div>
 
   <script>
+
+    
+
     const root = {
       question: "strong",
       yes: {
         question: "green-tea",
-        yes: { question: "with-milk", yes: { guess: "Matcha Latte" }, no: { guess: "Traditional Green Tea" } },
-        no: { question: "black-tea",
-          yes: { question: "with-milk", yes: { guess: "English Breakfast Latte" }, no: { guess: "Assam Black Tea" } },
-          no: { question: "herbal-tea",
-            yes: { question: "with-milk", yes: { guess: "Rooibos Latte" }, no: { guess: "Peppermint Tea" } },
-            no: { question: "flavored-tea",
-              yes: { question: "with-milk", yes: { guess: "Chai Latte" }, no: { guess: "Ginger Tea" } }
+        yes: { 
+          question: "with-milk",
+          yes: { guess: "Matcha Latte", image: "images/matcha_latte.jpg" }, // your image
+          no: { guess: "Traditional Green Tea", image: "images/green_tea.jpg" } // your image
+        },
+        no: { 
+          question: "black-tea",
+          yes: { 
+            question: "with-milk",
+            yes: { guess: "English Breakfast Latte", image: "images/english_breakfast_latte.jpg" }, // your image
+            no: { guess: "Assam Black Tea", image: "images/assam_black.jpg" } // your image
+          },
+          no: { 
+            question: "herbal-tea",
+            yes: { 
+              question: "with-milk",
+              yes: { guess: "Rooibos Latte", image: "images/rooibos_latte.jpg" }, // your image
+              no: { guess: "Peppermint Tea", image: "images/peppermint.jpg" } // your image
+            },
+            no: { 
+              question: "flavored-tea",
+              yes: { 
+                question: "with-milk",
+                yes: { guess: "Chai Latte", image: "images/chai_latte.jpg" }, // your image
+                no: { guess: "Ginger Tea", image: "images/ginger_tea.jpg" } // your image
+              }
             }
           }
         }
       },
+
       no: {
         question: "green-tea",
-        yes: { question: "with-milk", yes: { guess: "Hojicha Latte" }, no: { guess: "Sencha" } },
-        no: { question: "black-tea",
-          yes: { question: "with-milk", yes: { guess: "Thai Tea" }, no: { guess: "Earl Grey" } },
-          no: { question: "herbal-tea",
-            yes: { question: "with-milk", yes: { guess: "Chamomile Latte" }, no: { guess: "Chamomile" } },
-            no: { question: "flavored-tea",
-              yes: { question: "with-milk", yes: { guess: "Jasmine Tea Latte" }, no: { guess: "Jasmine Tea" } }
+        yes: { 
+          question: "with-milk",
+          yes: { guess: "Hojicha Latte", image: "images/hojicha_latte.jpg" }, // your image
+          no: { guess: "Sencha", image: "images/sencha.jpg" } // your image
+        },
+        no: { 
+          question: "black-tea",
+          yes: { 
+            question: "with-milk",
+            yes: { guess: "Thai Tea", image: "images/thai_tea.jpg" }, // your image
+            no: { guess: "Earl Grey", image: "images/earl_grey.jpg" } // your image
+          },
+          no: { 
+            question: "herbal-tea",
+            yes: { 
+              question: "with-milk",
+              yes: { guess: "Chamomile Latte", image: "images/chamomile_latte.jpg" }, // your image
+              no: { guess: "Chamomile", image: "images/chamomile.jpg" } // your image
+            },
+            no: { 
+              question: "flavored-tea",
+              yes: { 
+                question: "with-milk",
+                yes: { guess: "Jasmine Tea Latte", image: "images/jasmine_latte.jpg" }, // your image
+                no: { guess: "Jasmine Tea", image: "images/jasmine_tea.jpg" } // your image
+              }
             }
           }
         }
       }
     };
 
+    // Text for questions shown to users
     const questions = {
       "strong": "Do you like strong flavor?",
-      "light": "Do you like light flavor?",
-      "green-tea": "Do you like  green tea?",
+      "green-tea": "Do you like green tea?",
       "black-tea": "Do you like black tea?",
       "herbal-tea": "Do you like herbal tea?",
       "flavored-tea": "Do you like flavored tea?",
-      "with-milk": "Do you like served with milk?",
-      "without-milk": "Do you like served without milk?"
+      "with-milk": "Do you like it with milk?"
     };
 
     let currentNode = root;
@@ -88,19 +138,26 @@
     const yesButton = document.getElementById("yes");
     const noButton = document.getElementById("no");
     const restartButton = document.getElementById("restart");
+    const img = document.getElementById("tea-image");
 
     function askQuestion() {
       if (currentNode.guess) {
         questionDiv.innerText = "";
         resultDiv.innerText = "You should try: " + currentNode.guess + "!";
+
+        // Show tea image
+        if (currentNode.image) {
+          img.src = currentNode.image;
+          img.style.display = "block";
+        } else {
+          img.style.display = "none";
+        }
+
         yesButton.disabled = true;
         noButton.disabled = true;
-      } else if (!currentNode.yes && !currentNode.no) {
-        questionDiv.innerText = "";
-        resultDiv.innerText = "Sorry, we couldn't find your tea. Try again!";
-        yesButton.disabled = true;
-        noButton.disabled = true;
+
       } else {
+        img.style.display = "none";
         questionDiv.innerText = questions[currentNode.question] || "Next question...";
         resultDiv.innerText = "";
         yesButton.disabled = false;
@@ -123,8 +180,8 @@
       askQuestion();
     };
 
-    // Start the game
     askQuestion();
   </script>
+
 </body>
 </html>
