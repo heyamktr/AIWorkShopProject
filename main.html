@@ -229,55 +229,72 @@
       "with-milk": "Do you like it with milk?"
     };
 
-    let currentNode = root;
+    // Start the decision tree at the root node
+let currentNode = root;
 
-    const questionDiv = document.getElementById("question");
-    const resultDiv = document.getElementById("result");
-    const yesButton = document.getElementById("yes");
-    const noButton = document.getElementById("no");
-    const restartButton = document.getElementById("restart");
-    const img = document.getElementById("tea-image");
+// Get references to elements in the HTML
+const questionDiv = document.getElementById("question");   // Area that displays the current question
+const resultDiv = document.getElementById("result");       // Area that displays the final result (recommended tea)
+const yesButton = document.getElementById("yes");          // "Yes" button
+const noButton = document.getElementById("no");            // "No" button
+const restartButton = document.getElementById("restart");  // Restart button to begin again
+const img = document.getElementById("tea-image");          // Image element for tea photo
 
-    function askQuestion() {
-      if (currentNode.guess) {
-        questionDiv.innerText = "";
-        resultDiv.innerHTML = "<strong>You should try:</strong> " + currentNode.guess + "!<br><br>" + currentNode.description;
+// Function to show a question or result based on currentNode
+function askQuestion() {
+  // If currentNode contains a guess, the decision tree has reached an ending
+  if (currentNode.guess) {
+    questionDiv.innerText = "";   // Clear the question text
+    resultDiv.innerHTML = "<strong>You should try:</strong> " + currentNode.guess + "!<br><br>" + currentNode.description;
+    // Show the final tea recommendation with description
 
-        if (currentNode.image) {
-          img.src = currentNode.image;
-          img.style.display = "block";
-        } else {
-          img.style.display = "none";
-        }
-
-        yesButton.disabled = true;
-        noButton.disabled = true;
-      } 
-      else {
-        img.style.display = "none";
-        resultDiv.innerHTML = "";
-        questionDiv.innerHTML = questions[currentNode.question] || "Sorry, we couldn't find your tea. Try again!";
-        yesButton.disabled = false;
-        noButton.disabled = false;
-      }
+    // Show tea image only if it exists for this node
+    if (currentNode.image) {
+      img.src = currentNode.image;     // Set the image source
+      img.style.display = "block";     // Make image visible
+    } else {
+      img.style.display = "none";      // Hide image if no image is provided
     }
 
-    yesButton.onclick = () => {
-      currentNode = currentNode.yes || {};
-      askQuestion();
-    };
+    // Disable buttons since the quiz is finished
+    yesButton.disabled = true;
+    noButton.disabled = true;
+  } 
+  else {
+    // If not guess node → still inside decision tree
+    img.style.display = "none";     // Hide the image during questions
+    resultDiv.innerHTML = "";       // Clear results
+    
+    // Display the current question or fallback text if question key isn't found
+    questionDiv.innerHTML = questions[currentNode.question] || "Sorry, we couldn't find your tea. Try again!";
 
-    noButton.onclick = () => {
-      currentNode = currentNode.no || {};
-      askQuestion();
-    };
+    // Enable the Yes/No buttons for user interaction
+    yesButton.disabled = false;
+    noButton.disabled = false;
+  }
+}
 
-    restartButton.onclick = () => {
-      currentNode = root;
-      askQuestion();
-    };
+// When user clicks "Yes", go to the "yes" child node and continue
+yesButton.onclick = () => {
+  currentNode = currentNode.yes || {};   // Move to next node (or empty object if missing)
+  askQuestion();                         // Display next step
+};
 
-    askQuestion();
+// When user clicks "No", go to the "no" child node and continue
+noButton.onclick = () => {
+  currentNode = currentNode.no || {};    // Move to next node
+  askQuestion();                         // Display next step
+};
+
+// Restart the quiz by resetting to the root node
+restartButton.onclick = () => {
+  currentNode = root;      // Go back to start
+  askQuestion();           // Begin again
+};
+
+// Start the first question when the page loads
+askQuestion();
+
   </script>
 
 </body>
